@@ -98,9 +98,20 @@ export default function HomeScreen() {
     setNovoNumero(true);
   }
 
-  function porcentagem() {
-    const valor = converterParaNumero(display);
-    setDisplay(formatarNumero(valor / 100));
+  function apagarUltimo() {
+    if (display === "Erro" || novoNumero) {
+      setDisplay("0");
+      setNovoNumero(true);
+      return;
+    }
+
+    const novoDisplay = display.slice(0, -1);
+
+    if (novoDisplay === "" || novoDisplay === "-") {
+      setDisplay("0");
+    } else {
+      setDisplay(novoDisplay);
+    }
   }
 
   function textoDoVisor() {
@@ -122,6 +133,7 @@ export default function HomeScreen() {
           styles.botao,
           tipo === "operacao" && styles.botaoOperacao,
           tipo === "limpar" && styles.botaoLimpar,
+          tipo === "igual" && styles.botaoIgual,
         ]}
         onPress={acao}
       >
@@ -159,7 +171,7 @@ export default function HomeScreen() {
 
         <View style={styles.linha}>
           {botao("C", limpar, "limpar")}
-          {botao("%", porcentagem)}
+          {botao("⌫", apagarUltimo, "limpar")}
           {botao("÷", () => escolherOperacao("/"), "operacao")}
         </View>
 
@@ -186,10 +198,13 @@ export default function HomeScreen() {
 
         <View style={styles.linha}>
           {botao("0", () => clicarNumero("0"))}
-          {botao(".", () => clicarNumero("."))}
-          {botao("=", calcular, "operacao")}
+          {botao(",", () => clicarNumero("."))}
+          {botao("=", calcular, "igual")}
         </View>
       </View>
+      <Text style={styles.creditos}>
+        Projeto desenvolvido por: Geovana, Kelvin, Maiara, Walter e William
+      </Text>
     </View>
   );
 }
@@ -257,6 +272,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#a5a5a5",
   },
 
+  botaoIgual: {
+    backgroundColor: "#a5a5a5",
+  },
+
   textoBotao: {
     color: "#fff",
     fontSize: 28,
@@ -265,5 +284,12 @@ const styles = StyleSheet.create({
 
   textoNaoSelecionavel: {
     userSelect: "none",
+  },
+
+  creditos: {
+    color: "#fff",
+    fontSize: 14,
+    marginTop: 15,
+    textAlign: "center",
   },
 });
